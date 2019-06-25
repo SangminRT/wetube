@@ -1,4 +1,8 @@
 extends layouts/main.pug
 
 block content
-    p Hello!!!
+    .videos
+        //- 아래 item 키워드는 사용자 마음대로 정하면 된다.
+        each item in Videos
+            h1= item.title
+            p=  item.description
