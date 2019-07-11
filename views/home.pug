@@ -1,8 +1,18 @@
 extends layouts/main.pug
+include mixins/videoBlock
 
 block content
     .videos
         //- 아래 item 키워드는 사용자 마음대로 정하면 된다.
-        each item in Videos
-            h1= item.title
-            p=  item.description
+        each item in videos
+            +videoBlock({
+                id:item.id,
+                title:item.title,
+                views:item.views,
+                videoFile:item.fileUrl
+            })
+            //- videoFile:item.videoFile                            -> videoController.js 에 postUpload에서 새로 받은 newVideo를 console.log(newVideo) 해보면, videoFile이 아닌 fileUrl로 되어 있음
+            //-                                                       cf. models/video.js 참고
+            //-                                                       mixin인 videoBlock.pug에는 videoFile로 전달되니, 다른건 바꾸지 않아도 잘 작동.
+        //- which part is thing for matching? title
+        //- [videoBlock.pug]h4.videoBlock__title = video.pizza     <===>   [home.pug]pizza:item.title 

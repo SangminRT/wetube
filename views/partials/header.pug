@@ -3,11 +3,22 @@ header.header
         a(href=routes.home)
             i.fab.fa-youtube 
     .header_column
+        //- 컨트롤러도 query에 접근하려면, method가 get이어야 함.
+        //- get method가 url에 정보를 추가해주기 때문. post를 사용하면 주소창에 정보를 보여주지 않음.
         form(action=routes.search, method="get")      
             input(type="text", placeholder="Searh by term...", name="term")
     .header_column
         ul
-            li 
-                a(href=routes.join) Join
-            li
-                a(href=routes.login) Log In
+            //-user는 로그인이 되었는지 알려주는 임시 가짜 변수. (데이터베이스가 없을때. 테스트를 위함.) middleware에서 설정.
+            if !user.isAuthenticated     
+                li                                            
+                    a(href=routes.join) Join
+                li
+                    a(href=routes.login) Log In
+            else
+                li
+                    a(href=`/videos${routes.upload}`) Upload
+                li
+                    a(href=routes.userDetail(user.id)) Profile  
+                li
+                    a(href=routes.logout) Log Out

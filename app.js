@@ -24,6 +24,8 @@ function handleProfile(req, res){
 
 app.use(helmet());
 app.set("view engine", "pug");
+app.use("/uploads", express.static("uploads") )  // 주어진 directory에서 file을 전달하는 새로운 middleware function. 이 경우 어떤 종류의 controller나 view 같은 건 확인하지 않음. 그냥 file만 확인.
+                                                // -> '/uploads'로 가면 'uploads'라는 directory 안으로 들어간다는 것. | cf. middlewares.js에서 설정한 upload destination인 'uploads/videos/'
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));

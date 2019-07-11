@@ -25,12 +25,26 @@ const routes = {
     logout: LOGOUT,
     search: SEARCH,
     users: USERS,
-    userDetail: USER_DETAIL,
+    //userDetail: USER_DETAIL,
+    userDetail: (id) => {
+        if(id) {
+            return `/users/${id}`
+        } else {
+            return USER_DETAIL;
+        }
+    },                              // 수정하면서 userRouter.js도 함께 수정
     editProfile: EDIT_PROFILE,
     changePassword: CHANGE_PASSWORD,
     videos: VIDEOS,
     upload: UPLOAD,
-    videoDetail: VIDEOS_DITAIL,
+    //videoDetail: VIDEOS_DITAIL,
+    videoDetail: (id) => {
+        if(id) {
+            return `/videos/${id}`;
+        } else {
+            return VIDEOS_DITAIL;
+        }
+    },
     editVideo: EDIT_VIDEO,
     deleteVideo: DELETE_VIDEO
 };
