@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 html
     head
-       <script src="https://kit.fontawesome.com/7c7e6821d3.js"></script>
+        script(src="https://kit.fontawesome.com/7c7e6821d3.js")
         title #{pageTitle} | #{siteName}
+        link(rel="stylesheet", href="/static/styles.css")
     body
         // header
             h1 WeTube
@@ -12,3 +13,4 @@ html
         // footer
             span &copy; WeTube
         include ../partials/footer
+        script(src="/static/main.js")
