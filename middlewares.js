@@ -6,10 +6,8 @@ const multerVideo = multer({dest: 'uploads/video/'}); // dest: "uploads/video/" 
 export const localsMiddleware = (req, res, next) => {
   res.locals.siteName = 'WeTube';
   res.locals.routes = routes;
-  res.locals.user = {
-    isAuthenticated: false, // 실제 사용자 정보가 있으면 대체될 임시 코드로 true였음
-    id: 1,
-  };
+  res.locals.user = req.user || null; // user가 존재하거나, 존재하지 않다면 비어있는 object를 주도록. null 혹은 {}
+  // passport가 사용자를 로그인 시킬 때, passport는 쿠키나 serialize, deserialize 등의 기능을 다 지원해줌은 물론이고, user가 담긴 object를 요청(request)에도 올려줄 것이기 때문에 가능.
   next(); // app.js에서 코드 사이에 위치. 때문에 next를 호출해야 함. 다음 함수로 넘어가기 위함.
 };
 

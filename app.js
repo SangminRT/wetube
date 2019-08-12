@@ -5,6 +5,8 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
+import passport from 'passport';
+import session from 'express-session';
 // import { userInfo } from "os";
 import {localsMiddleware} from './middlewares';
 // import { userRouter } from "./routers/userRouter"
@@ -12,6 +14,8 @@ import routes from './routes';
 import globalRouter from './routers/globalRouter';
 import userRouter from './routers/userRouter';
 import videoRouter from './routers/videoRouter';
+
+import './passport'; // passport 설정 파일 (passport.js)을 import함.
 
 const app = express(); // express를 app 변수를 선언해서 express를 실행
 
@@ -31,6 +35,18 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(morgan('dev'));
+app.use(
+  session({
+    secret: process.env.COOKIE_SECRET,
+    resave: true,
+    saveUninitialized: false,
+  }),
+);
+app.use(passport.initialize());
+app.use(passport.session());
+// 위에서 실행된 cookieParser부터 쿠키가 내려와서, passport는 초기화 되고(initialize),
+// 그 다음엔 passport가 제 스스로 쿠키를 들여다봐서, 그 쿠키 정보에 해당하는 사용자를 찾아줄 것.
+// 그리고 passport는 자기가 찾은 그 사용자를 요청(request)의 object, 즉 req.user로 만들어 줌. - middleware.js 파일 참고. (localsMiddleware)
 app.use(localsMiddleware); // local변수에 접근하기 위함. 전역에서 사용하기 위함.
 
 // app.get("/", handleHome);
