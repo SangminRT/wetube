@@ -14,6 +14,22 @@ export const localsMiddleware = (req, res, next) => {
 // local에 로컬 변수를 저장하면, 이 변수들을 템플릿에서 사용 할 수 있음.
 // 전역적으로 사용할 수 있는 변수를 추가. 'views' folder 안에 있는 템플릿들 전부에서 사용 가능.
 
+export const onlyPublic = (req, res, next) => {
+  if (req.user) {
+    res.redirect(routes.home);
+  } else {
+    next();
+  }
+};
+
+export const onlyPrivate = (req, res, next) => {
+  if (req.user) {
+    next();
+  } else {
+    res.redirect(routes.home);
+  }
+};
+
 export const uploadVideo = multerVideo.single('videoFile'); // 여기서 single은 오직 하나의 파일만 Upload할 수 있는 걸 의미.
 // "videoFile"은 Name part로 여기 들어올 파일의 Name. | upload.pug 에서 설정한 것.
 // -> videoRouter.js에서 import 후 사용.

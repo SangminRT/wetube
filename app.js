@@ -6,7 +6,9 @@ import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import bodyParser from 'body-parser';
 import passport from 'passport';
+import mongoose from 'mongoose';
 import session from 'express-session';
+import MongoStore from 'connect-mongo';
 // import { userInfo } from "os";
 import {localsMiddleware} from './middlewares';
 // import { userRouter } from "./routers/userRouter"
@@ -18,6 +20,8 @@ import videoRouter from './routers/videoRouter';
 import './passport'; // passport 설정 파일 (passport.js)을 import함.
 
 const app = express(); // express를 app 변수를 선언해서 express를 실행
+
+const CookieStore = MongoStore(session);
 
 // allow function을 사용해서 표현
 // const handleHome = (req, res) => res.send('Hello from home');
@@ -40,6 +44,7 @@ app.use(
     secret: process.env.COOKIE_SECRET,
     resave: true,
     saveUninitialized: false,
+    store: new CookieStore({mongooseConnection: mongoose.connection}),
   }),
 );
 app.use(passport.initialize());
