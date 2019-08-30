@@ -11,7 +11,7 @@ header.header
         .header__column
             ul
                 //-user는 로그인이 되었는지 알려주는 임시 가짜 변수. (데이터베이스가 없을때. 테스트를 위함.) middleware에서 설정.
-                if !user 
+                if !loggedUser 
                     li                                            
                         a(href=routes.join) Join
                     li
@@ -20,6 +20,6 @@ header.header
                     li
                         a(href=`/videos${routes.upload}`) Upload
                     li
-                        a(href=routes.userDetail(user.id)) Profile  
+                        a(href=routes.me) Profile  
                     li
                         a(href=routes.logout) Log Out
