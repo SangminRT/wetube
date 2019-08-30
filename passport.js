@@ -23,7 +23,7 @@ passport.use(
     {
       clientID: process.env.FB_ID,
       clientSecret: process.env.FB_SECRET,
-      callbackURL: `https://tricky-crab-74.localtunnel.me${routes.facebookCallback}`,
+      callbackURL: `https://sweet-panda-98.localtunnel.me${routes.facebookCallback}`,
       profileFields: ['id', 'displayName', 'photos', 'email'],
       scope: ['public_profile', 'email'],
     },
