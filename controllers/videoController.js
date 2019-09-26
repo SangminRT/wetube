@@ -43,7 +43,14 @@ export const postUpload = async (req, res) => {
   /*
    const {body, file} = req;
    console.log(body,file);        // -> upload때 무슨 일이 일어나는지 알아보기 위함.          */
-  const newvideo = await Video.create({fileUrl: path, title, description});
+  const newvideo = await Video.create({
+    fileUrl: path,
+    title,
+    description,
+    creator: req.user.id,
+  });
+  req.user.videos.push(newvideo.id);
+  req.user.save();
   // console.log(newvideo)
   // res.redirect(routes.videoDetail(324516));   // 324516는 임시 가짜 db에 설정해둔 id
   res.redirect(routes.videoDetail(newvideo.id));
@@ -55,9 +62,10 @@ export const videoDetail = async (req, res) => {
     params: {id},
   } = req;
   try {
-    const video = await Video.findById(id); // mongoose가 여러가지 옵션들을 가지고 있음. https://mongoosejs.com/docs/queries.html
+    // const video = await Video.findById(id); // mongoose가 여러가지 옵션들을 가지고 있음. https://mongoosejs.com/docs/queries.html
     // parameter는 ID이고 ID의 값이 query로 보내짐.
     // console.log(video);
+    const video = await Video.findById(id).populate('creator'); // populate는 objectID 타입에만 쓸 수 있음. (해당 객체 전체를 가져옴) Video.js 파일 참고
     res.render('videoDetail', {pageTitle: video.title, video}); // video 변수를 템플릿에 전달하기 위해 'video'('video: video'와 같음)를 추가.
   } catch (error) {
     // 객체 {key : value}의 key값과 value값이 같을 때, 합쳐서 사용할 수 있음.
@@ -71,7 +79,11 @@ export const getEditVideo = async (req, res) => {
   } = req;
   try {
     const video = await Video.findById(id);
-    res.render('editVideo', {pageTitle: `Edit ${video.title}`, video}); // editVideo.pug
+    if (video.creator !== req.user.id) {
+      throw Error();
+    } else {
+      res.render('editVideo', {pageTitle: `Edit ${video.title}`, video}); // editVideo.pug
+    }
   } catch (error) {
     res.redirect(routes.home);
   }
@@ -95,7 +107,12 @@ export const deleteVideo = async (req, res) => {
     params: {id},
   } = req;
   try {
-    await Video.findByIdAndRemove({_id: id});
+    const video = await Video.findById(id);
+    if (video.creator !== req.user.id) {
+      throw Error();
+    } else {
+      await Video.findByIdAndRemove({_id: id});
+    }
   } catch (error) {
     console.log(error);
   }

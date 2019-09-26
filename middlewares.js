@@ -3,6 +3,8 @@ import routes from './routes';
 
 const multerVideo = multer({dest: 'uploads/video/'}); // dest: "uploads/video/" -> destination을 적은 것. (server에 있는) 프로젝트 folder안 (uploads/video/)에 Upload함.
 // "/uploads/video/" 이렇게 적으면 프로젝트 폴더 안이 아닌 root에서 upload를 만들게 됨.
+const multerAvatar = multer({dest: 'uploads/avatar/'});
+
 export const localsMiddleware = (req, res, next) => {
   res.locals.siteName = 'WeTube';
   res.locals.routes = routes;
@@ -33,3 +35,4 @@ export const onlyPrivate = (req, res, next) => {
 export const uploadVideo = multerVideo.single('videoFile'); // 여기서 single은 오직 하나의 파일만 Upload할 수 있는 걸 의미.
 // "videoFile"은 Name part로 여기 들어올 파일의 Name. | upload.pug 에서 설정한 것.
 // -> videoRouter.js에서 import 후 사용.
+export const uploadAvatar = multerAvatar.single('avatar'); // 여기서 'avatar'은 editProfile.pug 파일 안의 .fileUpload 부분 input name 확인.
