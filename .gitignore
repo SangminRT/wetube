@@ -92,3 +92,5 @@ package-lock.json
 uploads
 
 static
+
+yarn.lock
