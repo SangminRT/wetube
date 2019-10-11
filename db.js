@@ -10,6 +10,7 @@ mongoose.connect(
   {
     useNewUrlParser: true,
     useFindAndModify: false,
+    useUnifiedTopology: true,
   },
 ); // 새로운 버전의 Mongoose는 이런 식으로 Configuration을 보낼 수 있다.
 

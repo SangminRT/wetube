@@ -1,5 +1,6 @@
 import routes from '../routes';
 import Video from '../models/Video'; // 이건 Database의 element가 아니라 단지 model이다. element를 받는 통로일 뿐, element 자체는 아님.
+import Comment from '../models/Comment';
 
 export const home = async (req, res) => {
   // Javascript는 동시에 많은 일들을 처리함. 때문에 Javascript가 기다리게 해야할 때는 keyword를 추가해야 함.  (async - 이 function의 어떤 부분은 꼭 기다려야 한다고 이야기 해줌.)
@@ -65,7 +66,9 @@ export const videoDetail = async (req, res) => {
     // const video = await Video.findById(id); // mongoose가 여러가지 옵션들을 가지고 있음. https://mongoosejs.com/docs/queries.html
     // parameter는 ID이고 ID의 값이 query로 보내짐.
     // console.log(video);
-    const video = await Video.findById(id).populate('creator'); // populate는 objectID 타입에만 쓸 수 있음. (해당 객체 전체를 가져옴) Video.js 파일 참고
+    const video = await Video.findById(id)
+      .populate('creator')
+      .populate('comments'); // populate는 objectID 타입에만 쓸 수 있음. (해당 객체 전체를 가져옴) Video.js 파일 참고
     res.render('videoDetail', {pageTitle: video.title, video}); // video 변수를 템플릿에 전달하기 위해 'video'('video: video'와 같음)를 추가.
   } catch (error) {
     // 객체 {key : value}의 key값과 value값이 같을 때, 합쳐서 사용할 수 있음.
@@ -124,3 +127,44 @@ export const deleteVideo = async (req, res) => {
 이 함수가  views 폴더에서 해당 파일명을 가진, 확장자가 pug인 템플릿 파일을 찾아 보여줌.
 view engine을 설정해 두었기 때문에 자동으로 pug 확장자!		                            */
 // render 함수의 첫번째 인자는 템플릿이고, 두번째 인자는 템플릿에 추가할 정보가 담긴 객체.
+
+// Register Video View
+
+export const postRegisterView = async (req, res) => {
+  const {
+    params: {id},
+  } = req;
+  try {
+    const video = await Video.findById(id);
+    video.views += 1; // Video.js 참고
+    video.save();
+    res.status(200);
+  } catch (error) {
+    res.status(400);
+  } finally {
+    res.end();
+  }
+};
+
+// Add Comment
+export const postAddCommnet = async (req, res) => {
+  const {
+    // postAdd 하는데
+    params: {id}, // id는 url에서 가져오고,
+    body: {comment}, // comment는 body에서 얻어 옴.
+    user,
+  } = req;
+  try {
+    const video = await Video.findById(id);
+    const newComment = await Comment.create({
+      text: comment,
+      creator: user.id,
+    });
+    video.comments.push(newComment.id);
+    video.save();
+  } catch (error) {
+    res.status(400);
+  } finally {
+    res.end();
+  }
+};

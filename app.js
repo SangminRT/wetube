@@ -18,6 +18,7 @@ import userRouter from './routers/userRouter';
 import videoRouter from './routers/videoRouter';
 
 import './passport'; // passport 설정 파일 (passport.js)을 import함.
+import apiRouter from './routers/apiRouter';
 
 const app = express(); // express를 app 변수를 선언해서 express를 실행
 
@@ -61,5 +62,7 @@ app.use(localsMiddleware); // local변수에 접근하기 위함. 전역에서 �
 app.use(routes.home, globalRouter);
 app.use(routes.users, userRouter);
 app.use(routes.videos, videoRouter);
+
+app.use(routes.api, apiRouter);
 
 export default app;
